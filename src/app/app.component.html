@@ -1,0 +1,30 @@
+<mat-toolbar color="primary">
+  <mat-icon>local_fire_department</mat-icon>
+  <span>Copa 2022</span>
+</mat-toolbar>
+<div class="overlay" *ngIf="showspiner">
+  <div class="center">
+    <mat-progress-spinner diameter="50" mode="indeterminate" color="primary"></mat-progress-spinner>
+  </div>
+</div>
+<div class="container-wrapper">
+  <a *ngFor="let page of itemA$ | async" [href]="'#'+page.name">| {{page.name}} |</a>
+  <div class="container">
+    <mat-card *ngFor="let page of item$ | async" [id]="page.name" fxLayout="row wrap" fxLayoutAlign="space-between">
+      <button mat-button color="basic" fxFlex="0 1 calc(16%)"
+      fxFlex.lt-md="0 1 calc(25%)"
+      fxFlex.lt-sm="0 1 calc(50%)"
+      fxFlex.lt-xs="0 1 calc(50%)">{{page.name}} {{showvars(page)}}</button>
+      <button *ngFor="let sticker of page.stickers" mat-raised-button [color]="getQtd(sticker, page) == 0 ? 'warn' : (getQtd(sticker, page) == 1 ? 'success' : 'primary')"
+      fxFlex="0 1 calc(16%)"
+      fxFlex.lt-md="0 1 calc(25%)"
+      fxFlex.lt-sm="0 1 calc(50%)"
+      fxFlex.lt-xs="0 1 calc(50%)">
+        <mat-icon aria-hidden="true" fontIcon="do_not_disturb_on" (click)="dec(sticker, page)"></mat-icon>
+        {{sticker}}: {{getQtd(sticker, page)}}
+        <mat-icon aria-hidden="true" fontIcon="add_circle" (click)="inc(sticker, page)"></mat-icon>
+      </button>
+    </mat-card>
+
+  </div>
+</div>
