@@ -1,6 +1,6 @@
 <mat-toolbar color="primary">
   <mat-icon>local_fire_department</mat-icon>
-  <span>Copa 2022</span>
+  <span>Copa 2022 - total: {{total}} - tem: {{uniq}} - repetidas: {{dups}} - faltam: {{total - uniq}}</span>
 </mat-toolbar>
 <div class="overlay" *ngIf="showspiner">
   <div class="center">
@@ -8,13 +8,18 @@
   </div>
 </div>
 <div class="container-wrapper">
-  <a *ngFor="let page of itemA$ | async" [href]="'#'+page.name">| {{page.name}} |</a>
+  <a href="#PaginaInicial">| Inicial |</a>
+  <a href="#Estadios">| Estádios |</a>
+  <a href="#Museu">| Museu |</a>
+  <a *ngFor="let page of listaAlfa " [href]="'#'+page">| {{page}} |</a>
+  <mat-divider></mat-divider>
+  <a *ngFor="let acr of listaAcr" [href]="'#'+acr.name">| {{acr.acr}} |</a>
   <div class="container">
-    <mat-card *ngFor="let page of item$ | async" [id]="page.name" fxLayout="row wrap" fxLayoutAlign="space-between">
-      <button mat-button color="basic" fxFlex="0 1 calc(16%)"
+    <mat-card *ngFor="let page of lista | async" [id]="page.name" fxLayout="row wrap" fxLayoutAlign="space-between">
+      <button mat-button color="basic" fxFlex="0 1 calc(16%)" (click)="topFunction()"
       fxFlex.lt-md="0 1 calc(25%)"
       fxFlex.lt-sm="0 1 calc(50%)"
-      fxFlex.lt-xs="0 1 calc(50%)">{{page.name}} {{showvars(page)}}</button>
+      fxFlex.lt-xs="0 1 calc(50%)">{{getPageDesc(page)}}</button>
       <button *ngFor="let sticker of page.stickers" mat-raised-button [color]="getQtd(sticker, page) == 0 ? 'warn' : (getQtd(sticker, page) == 1 ? 'success' : 'primary')"
       fxFlex="0 1 calc(16%)"
       fxFlex.lt-md="0 1 calc(25%)"
