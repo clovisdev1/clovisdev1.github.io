@@ -110,7 +110,7 @@ export class AppComponent {
     for (let i = 0; i < this.listaAcr.length; i++) {
       let acrItem = this.listaAcr[i];
       if (acrItem.name == page.name) {
-        return page.name + ' tt: ' + acrItem.total + ' - t: ' + acrItem.uniq + ' - r: ' + acrItem.dups;
+        return page.name + ' - tem: ' + acrItem.uniq + ' - rep: ' + acrItem.dups;
       }
     };
     return page.name;
