@@ -9,7 +9,6 @@ import { Page, Acr } from './data/page-data';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  showspiner = false;
   title = 'copa';
   listaAcr: Acr[] = [];
   listaOrder: string[] = [];
@@ -75,23 +74,45 @@ export class AppComponent {
     let i = item.stickers.indexOf(sticker);
     return item.qtds[i];
   }
-  inc(sticker : string, item : Page) {
-    this.showspiner = true;
+  async updatePage(item : Page) {
+    let itemDoc = await this.firestore.doc<Page>('copa/'+ item.name);
+    await itemDoc.update(item);
+  }
+  getAcrItem(page: Page) : Acr {
+    for (const acrItem of this.listaAcr) {
+      if (acrItem.name == page.name) {
+        return acrItem;
+      }
+    };
+    return this.listaAcr[0];
+  }
+  async inc(sticker : string, item : Page) {
     let i = item.stickers.indexOf(sticker);
     item.qtds[i]++;
-    let itemDoc = this.firestore.doc<Page>('copa/'+item.name);
-    itemDoc.update(item);
-    this.showspiner = false;
+    await this.updatePage(item);
+    let acr = this.getAcrItem(item);
+    if (item.qtds[i] > 1) {
+      this.dups++;
+      acr.dups++;
+    } else {
+      this.uniq++;
+      acr.uniq++;
+    }
   }
-  dec(sticker : string, item : Page) {
-    this.showspiner = true;
+  async dec(sticker : string, item : Page) {
     let i = item.stickers.indexOf(sticker);
     if (item.qtds[i] > 0) {
       item.qtds[i]--;
-      let itemDoc = this.firestore.doc<Page>('copa/'+item.name);
-      itemDoc.update(item);
+      await this.updatePage(item);
+      let acr = this.getAcrItem(item);
+      if (item.qtds[i] == 0) {
+        this.uniq--;
+        acr.uniq--;
+      } else {
+        this.dups--;
+        acr.dups--;
+      }
     }
-    this.showspiner = false;
   }
   showvars(item : any) {
     console.log(JSON.stringify(item));
