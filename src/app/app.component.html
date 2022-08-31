@@ -23,20 +23,20 @@
         </mat-panel-description>
       </mat-expansion-panel-header>
       <div *ngFor="let sticker of page.stickers" fxLayout="row wrap" fxLayoutAlign="space-between">
-        <button mat-raised-button [color]="getQtd(sticker, page) == 0 ? 'warn' : (getQtd(sticker, page) == 1 ? 'success' : 'primary')"
-        fxFlex="0 1 calc(47%)">
+        <div [class]="getQtd(sticker, page) == 0 ? 'color-none' : (getQtd(sticker, page) == 1 ? 'color-have' : 'color-dup')"
+        fxFlex="0 1 calc(49%)">
           <mat-icon>girl</mat-icon>
           <mat-icon aria-hidden="true" fontIcon="do_not_disturb_on" (click)="dec(sticker, page, true)"></mat-icon>
           {{sticker}}: {{getQtdG(sticker, page)}}
           <mat-icon aria-hidden="true" fontIcon="add_circle" (click)="inc(sticker, page, true)"></mat-icon>
-        </button>
-        <button mat-raised-button [color]="getQtd(sticker, page) == 0 ? 'warn' : (getQtd(sticker, page) == 1 ? 'success' : 'primary')"
-        fxFlex="0 1 calc(47%)">
+        </div>
+        <div [class]="getQtd(sticker, page) == 0 ? 'color-none' : (getQtd(sticker, page) == 1 ? 'color-have' : 'color-dup')"
+        fxFlex="0 1 calc(49%)">
         <mat-icon>boy</mat-icon>
         <mat-icon aria-hidden="true" fontIcon="do_not_disturb_on" (click)="dec(sticker, page, false)"></mat-icon>
           {{sticker}}: {{getQtdO(sticker, page)}}
           <mat-icon aria-hidden="true" fontIcon="add_circle" (click)="inc(sticker, page, false)"></mat-icon>
-        </button>
+      </div>
       </div>
 
     </mat-expansion-panel>

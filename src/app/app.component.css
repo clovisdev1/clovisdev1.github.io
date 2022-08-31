@@ -1,3 +1,18 @@
+.color-none {
+  background-color: red;
+  color: #fff;
+  margin: 1px 1px 0px 0px;
+}
+.color-have {
+  background-color: green;
+  color: #fff;
+  margin: 1px 1px 0px 0px;
+}
+.color-dup {
+  background-color: blue;
+  color: #fff;
+  margin: 1px 1px 0px 0px;
+}
 .mat-success {
   background-color: green;
   color: #fff;
