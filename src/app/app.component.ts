@@ -1,6 +1,7 @@
+import { Breakpoints } from '@angular/cdk/layout';
 import { Component } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-
+import {MatSnackBar} from '@angular/material/snack-bar';
 import { Observable } from 'rxjs';
 import { Page, Acr } from './data/page-data';
 @Component({
@@ -17,13 +18,19 @@ export class AppComponent {
   total : number = 0;
   uniq : number = 0;
   dups : number = 0;
+  expOpened : string = 'PaginaInicial';
+  identifyer = (index:number, item:any) => item.name; // para não renderizar o expansion panel sempre que mudar o texto dentro dele
 
-  constructor(private firestore: AngularFirestore) {
-    this.lista = firestore.collection('copa', ref => ref.orderBy('order')).valueChanges();
-    firestore.collection("copa").get().forEach((querySnapshot) => {
+
+  constructor(private firestore: AngularFirestore, private _snackBar: MatSnackBar) {
+    this.lista = firestore.collection('copa2', ref => ref.orderBy('order')).valueChanges();
+    // const newCollection = firestore.collection<Page>('copa2');
+    const collection = firestore.collection("copa2");
+    collection.get().forEach((querySnapshot) => {
       querySnapshot.forEach((doc) => {
           //console.log(`${doc.id} => ${doc.data()}`);
           let data : Page = doc.data() as Page;
+          // newCollection.doc(data.name).set(data);
           let stickerAcr = this.getAcr(data);
           let orderAcr = stickerAcr;
           if (stickerAcr == '000') {stickerAcr = '000'; orderAcr = '000'}
@@ -33,10 +40,16 @@ export class AppComponent {
           let pagetotal = data.stickers.length;
           let pageuniq = 0;
           let pagedups = 0;
+          //if (!data.qtdsG) data.qtdsG = [];
+          //if (!data.qtdsO) data.qtdsO = [];
+          //while (data.qtdsG.length < data.stickers.length) data.qtdsG.push(0);
+          //while (data.qtdsO.length < data.stickers.length) data.qtdsO.push(0);
+          //collection.doc<Page>(data.name).update(data);
           for (let index = 0; index < data.stickers.length; index++) {
-            if (data.qtds[index] > 0) {
+            let qtds = data.qtdsG[index] + data.qtdsO[index];
+            if (qtds > 0) {
               pageuniq++;
-              pagedups += (data.qtds[index]-1);
+              pagedups += (qtds-1);
             }
           }
           this.total += pagetotal;
@@ -72,10 +85,18 @@ export class AppComponent {
   }
   getQtd(sticker : string, item : Page) {
     let i = item.stickers.indexOf(sticker);
-    return item.qtds[i];
+    return item.qtdsG[i] + item.qtdsO[i];
+  }
+  getQtdO(sticker : string, item : Page) {
+    let i = item.stickers.indexOf(sticker);
+    return item.qtdsO[i];
+  }
+  getQtdG(sticker : string, item : Page) {
+    let i = item.stickers.indexOf(sticker);
+    return item.qtdsG[i];
   }
   async updatePage(item : Page) {
-    let itemDoc = await this.firestore.doc<Page>('copa/'+ item.name);
+    let itemDoc = await this.firestore.doc<Page>('copa2/'+ item.name);
     await itemDoc.update(item);
   }
   getAcrItem(page: Page) : Acr {
@@ -86,12 +107,13 @@ export class AppComponent {
     };
     return this.listaAcr[0];
   }
-  async inc(sticker : string, item : Page) {
+  async inc(sticker : string, item : Page, isGabi : boolean) {
     let i = item.stickers.indexOf(sticker);
-    item.qtds[i]++;
+    if (isGabi) item.qtdsG[i]++;
+    else item.qtdsO[i]++;
     await this.updatePage(item);
     let acr = this.getAcrItem(item);
-    if (item.qtds[i] > 1) {
+    if (item.qtdsG[i] + item.qtdsO[i] > 1) {
       this.dups++;
       acr.dups++;
     } else {
@@ -99,19 +121,25 @@ export class AppComponent {
       acr.uniq++;
     }
   }
-  async dec(sticker : string, item : Page) {
+  async dec(sticker : string, item : Page, isGabi : boolean) {
     let i = item.stickers.indexOf(sticker);
-    if (item.qtds[i] > 0) {
-      item.qtds[i]--;
+    let qtd = isGabi ? item.qtdsG[i] : item.qtdsO[i];
+    if (qtd > 0) {
+      if (isGabi) item.qtdsG[i]--;
+      else item.qtdsO[i]--;
       await this.updatePage(item);
       let acr = this.getAcrItem(item);
-      if (item.qtds[i] == 0) {
+      if (item.qtdsG[i] + item.qtdsO[i] == 0) {
         this.uniq--;
         acr.uniq--;
       } else {
         this.dups--;
         acr.dups--;
       }
+    } else {
+      this._snackBar.open('Impossível diminuir pois ' + (isGabi ? 'Gabi' : 'Omaro') + ' não possui', 'fechar', {
+        duration: 15 * 1000,
+      });
     }
   }
   showvars(item : any) {
@@ -126,14 +154,20 @@ export class AppComponent {
   topFunction() {
     document.body.scrollTop = 0; // For Safari
     document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+    this.expOpened = '';
   }
   getPageDesc(page: Page) {
     for (let i = 0; i < this.listaAcr.length; i++) {
       let acrItem = this.listaAcr[i];
       if (acrItem.name == page.name) {
-        return page.name + ' ' + acrItem.uniq + ';' + acrItem.dups;
+        return page.name + ' ' + acrItem.uniq + ';rep:' + acrItem.dups;
       }
     };
     return page.name;
+  }
+  openPanel(name: string) {
+    this.expOpened = name;
+    var n = name;
+    window.setTimeout(() => { document.getElementById(n)?.scrollIntoView() }, 100);
   }
 }

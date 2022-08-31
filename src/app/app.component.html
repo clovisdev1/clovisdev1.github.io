@@ -1,30 +1,45 @@
 <mat-toolbar color="primary">
-  <mat-icon>local_fire_department</mat-icon>
-  <span>tem:{{uniq}} - repetidas:{{dups}} - faltam:{{total - uniq}}</span>
+  <span>rep:{{dups}}-falta:{{total - uniq}}</span>
 </mat-toolbar>
 <div class="container-wrapper">
-  <a href="#PaginaInicial">| Inicial |</a>
-  <a href="#Estadios">| Estádios |</a>
-  <a href="#Museu">| Museu |</a>
-  <a *ngFor="let page of listaAlfa " [href]="'#'+page">| {{page}} |</a>
+  <a href="#PaginaInicial" (click)="openPanel('PaginaInicial')">| Inicial |</a>
+  <a href="#Estadios" (click)="openPanel('Estadios')">| Estádios |</a>
+  <a href="#Museu" (click)="openPanel('Museu')">| Museu |</a>
+  <a *ngFor="let page of listaAlfa " (click)="openPanel(page)">| {{page}} |</a>
   <mat-divider></mat-divider>
-  <a *ngFor="let acr of listaAcr" [href]="'#'+acr.name">| {{acr.acr}} |</a>
-  <div class="container">
-    <mat-card *ngFor="let page of lista | async" [id]="page.name" fxLayout="row wrap" fxLayoutAlign="space-between">
-      <button mat-button color="basic" fxFlex="0 1 calc(16%)" (click)="topFunction()"
-      fxFlex.lt-md="0 1 calc(25%)"
-      fxFlex.lt-sm="0 1 calc(50%)"
-      fxFlex.lt-xs="0 1 calc(50%)">{{getPageDesc(page)}}</button>
-      <button *ngFor="let sticker of page.stickers" mat-raised-button [color]="getQtd(sticker, page) == 0 ? 'warn' : (getQtd(sticker, page) == 1 ? 'success' : 'primary')"
-      fxFlex="0 1 calc(16%)"
-      fxFlex.lt-md="0 1 calc(25%)"
-      fxFlex.lt-sm="0 1 calc(50%)"
-      fxFlex.lt-xs="0 1 calc(50%)">
-        <mat-icon aria-hidden="true" fontIcon="do_not_disturb_on" (click)="dec(sticker, page)"></mat-icon>
-        {{sticker}}: {{getQtd(sticker, page)}}
-        <mat-icon aria-hidden="true" fontIcon="add_circle" (click)="inc(sticker, page)"></mat-icon>
-      </button>
-    </mat-card>
+  <a *ngFor="let acr of listaAcr" (click)="openPanel(acr.name)">| {{acr.acr}} |</a>
 
-  </div>
+
+  <mat-accordion>
+    <mat-expansion-panel
+    [expanded]="expOpened == page.name" *ngFor="let page of lista | async; trackBy: identifyer" [id]="page.name">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <mat-icon (click)="topFunction()">home</mat-icon>
+          {{page.name}}
+        </mat-panel-title>
+        <mat-panel-description>
+          {{getPageDesc(page)}}
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <div *ngFor="let sticker of page.stickers" fxLayout="row wrap" fxLayoutAlign="space-between">
+        <button mat-raised-button [color]="getQtd(sticker, page) == 0 ? 'warn' : (getQtd(sticker, page) == 1 ? 'success' : 'primary')"
+        fxFlex="0 1 calc(47%)">
+          <mat-icon>girl</mat-icon>
+          <mat-icon aria-hidden="true" fontIcon="do_not_disturb_on" (click)="dec(sticker, page, true)"></mat-icon>
+          {{sticker}}: {{getQtdG(sticker, page)}}
+          <mat-icon aria-hidden="true" fontIcon="add_circle" (click)="inc(sticker, page, true)"></mat-icon>
+        </button>
+        <button mat-raised-button [color]="getQtd(sticker, page) == 0 ? 'warn' : (getQtd(sticker, page) == 1 ? 'success' : 'primary')"
+        fxFlex="0 1 calc(47%)">
+        <mat-icon>boy</mat-icon>
+        <mat-icon aria-hidden="true" fontIcon="do_not_disturb_on" (click)="dec(sticker, page, false)"></mat-icon>
+          {{sticker}}: {{getQtdO(sticker, page)}}
+          <mat-icon aria-hidden="true" fontIcon="add_circle" (click)="inc(sticker, page, false)"></mat-icon>
+        </button>
+      </div>
+
+    </mat-expansion-panel>
+  </mat-accordion>
+
 </div>

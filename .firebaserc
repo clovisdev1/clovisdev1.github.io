@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "copa-b2abd": {
+      "hosting": {
+        "copa": [
+          "copa-b2abd"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "copa-b2abd"
+  }
+}

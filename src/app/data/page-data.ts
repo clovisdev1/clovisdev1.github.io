@@ -4,7 +4,8 @@ export interface Page {
   name: string;
   order: number;
   stickers: string[];
-  qtds: number[];
+  qtdsG: number[];
+  qtdsO: number[];
 }
 export interface Acr {
   name : string;

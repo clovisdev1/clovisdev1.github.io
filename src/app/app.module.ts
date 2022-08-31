@@ -11,7 +11,10 @@ import { MatCardModule } from '@angular/material/card';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 // firebase
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
@@ -33,6 +36,9 @@ import { ServiceWorkerModule } from '@angular/service-worker';
     MatButtonModule,
     MatDividerModule,
     MatProgressSpinnerModule,
+    MatExpansionModule,
+    MatSlideToggleModule,
+    MatSnackBarModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
