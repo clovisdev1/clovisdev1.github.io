@@ -2,12 +2,13 @@
   <span>rep:{{dups}}-falta:{{total - uniq}}</span>
 </mat-toolbar>
 <div class="container-wrapper">
+  <a href="#Repetidas" (click)="openPanel('Repetidas')">| Repetidas |</a>
   <a href="#PaginaInicial" (click)="openPanel('PaginaInicial')">| Inicial |</a>
   <a href="#Estadios" (click)="openPanel('Estadios')">| Estádios |</a>
   <a href="#Museu" (click)="openPanel('Museu')">| Museu |</a>
-  <a *ngFor="let page of listaAlfa " (click)="openPanel(page)">| {{page}} |</a>
+  <a *ngFor="let page of listaAlfa " [href]="'#'+page" (click)="openPanel(page)">| {{page}} |</a>
   <mat-divider></mat-divider>
-  <a *ngFor="let acr of listaAcr" (click)="openPanel(acr.name)">| {{acr.acr}} |</a>
+  <a *ngFor="let acr of listaAcr" [href]="'#'+acr.name" (click)="openPanel(acr.name)">| {{acr.acr}} |</a>
 
 
   <mat-accordion>
@@ -38,7 +39,22 @@
           <mat-icon aria-hidden="true" fontIcon="add_circle" (click)="inc(sticker, page, false)"></mat-icon>
       </div>
       </div>
+    </mat-expansion-panel>
 
+    <mat-expansion-panel id="Repetidas" [expanded]="expOpened == 'Repetidas'" >
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <mat-icon (click)="topFunction()">home</mat-icon>
+        </mat-panel-title>
+        <mat-panel-description>
+          Repetidas
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <div *ngFor="let page of lista | async; trackBy: identifyer" fxLayout="row wrap" fxLayoutAlign="space-between">
+        <ng-container *ngFor="let sticker of page.stickers">
+          <div class="color-dup" fxFlex="0 1 calc(49%)" *ngIf="getQtd(sticker, page) > 1">{{sticker}}: {{getQtd(sticker, page)}};</div>
+        </ng-container>
+      </div>
     </mat-expansion-panel>
   </mat-accordion>
 
