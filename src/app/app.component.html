@@ -52,7 +52,7 @@
       </mat-expansion-panel-header>
       <div *ngFor="let page of lista | async; trackBy: identifyer" fxLayout="row wrap" fxLayoutAlign="space-between">
         <ng-container *ngFor="let sticker of page.stickers">
-          <div class="color-dup" fxFlex="0 1 calc(49%)" *ngIf="getQtd(sticker, page) > 1">{{sticker}}: {{getQtd(sticker, page)}};</div>
+          <div class="color-dup" fxFlex="0 1 calc(49%)" *ngIf="getQtd(sticker, page) > 1">{{sticker}}</div>
         </ng-container>
       </div>
     </mat-expansion-panel>

@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import { Observable } from 'rxjs';
+import { Log } from './data/log-data';
 import { Page, Acr } from './data/page-data';
 @Component({
   selector: 'app-root',
@@ -99,6 +100,11 @@ export class AppComponent {
     let itemDoc = await this.firestore.doc<Page>('copa2/'+ item.name);
     await itemDoc.update(item);
   }
+  async addLog(name : string, inc : boolean, isGabi : boolean) {
+    let item : Log = { name: name, inc : inc, user: isGabi ? 'G' : 'O', date: new Date().toISOString()};
+    let itemDoc = await this.firestore.doc<Log>('log/'+ item.date);
+    await itemDoc.update(item);
+  }
   getAcrItem(page: Page) : Acr {
     for (const acrItem of this.listaAcr) {
       if (acrItem.name == page.name) {
@@ -112,6 +118,7 @@ export class AppComponent {
     if (isGabi) item.qtdsG[i]++;
     else item.qtdsO[i]++;
     await this.updatePage(item);
+    await this.addLog(sticker, true, isGabi);
     let acr = this.getAcrItem(item);
     if (item.qtdsG[i] + item.qtdsO[i] > 1) {
       this.dups++;
@@ -128,6 +135,7 @@ export class AppComponent {
       if (isGabi) item.qtdsG[i]--;
       else item.qtdsO[i]--;
       await this.updatePage(item);
+      await this.addLog(sticker, false, isGabi);
       let acr = this.getAcrItem(item);
       if (item.qtdsG[i] + item.qtdsO[i] == 0) {
         this.uniq--;
