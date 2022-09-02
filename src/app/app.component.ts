@@ -103,7 +103,7 @@ export class AppComponent {
   async addLog(name : string, inc : boolean, isGabi : boolean) {
     let item : Log = { name: name, inc : inc, user: isGabi ? 'G' : 'O', date: new Date().toISOString()};
     let itemDoc = await this.firestore.doc<Log>('log/'+ item.date);
-    await itemDoc.update(item);
+    await itemDoc.set(item);
   }
   getAcrItem(page: Page) : Acr {
     for (const acrItem of this.listaAcr) {
