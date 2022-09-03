@@ -45,14 +45,16 @@
       <mat-expansion-panel-header>
         <mat-panel-title>
           <mat-icon (click)="topFunction()">home</mat-icon>
+          Repetidas
         </mat-panel-title>
         <mat-panel-description>
-          Repetidas
+          (Rosa->só gabi, Verde->só omaro)
         </mat-panel-description>
       </mat-expansion-panel-header>
       <div *ngFor="let page of lista | async; trackBy: identifyer" fxLayout="row wrap" fxLayoutAlign="space-between">
         <ng-container *ngFor="let sticker of page.stickers">
-          <div class="color-dup" fxFlex="0 1 calc(49%)" *ngIf="getQtd(sticker, page) > 1">{{sticker}}</div>
+          <div [class]="getQtdO(sticker, page) == 0 ? 'color-g' : (getQtdG(sticker, page) == 0 ? 'color-have' : 'color-dup')"
+           fxFlex="0 1 calc(49%)" *ngIf="getQtd(sticker, page) > 1">{{sticker}} - ({{getQtd(sticker, page)-1}})</div>
         </ng-container>
       </div>
     </mat-expansion-panel>

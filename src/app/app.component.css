@@ -3,7 +3,11 @@
   color: #fff;
   margin: 1px 1px 0px 0px;
 }
-.color-have {
+.color-g {
+  background-color: #c67;
+  color: #fff;
+  margin: 1px 1px 0px 0px;
+}.color-have {
   background-color: green;
   color: #fff;
   margin: 1px 1px 0px 0px;
